@@ -4,7 +4,6 @@ import (
 	"cloud.google.com/go/datastore"
 	"context"
 	"encoding/json"
-	"errors"
 	"github.com/gorilla/mux"
 	"go-datastore-poc/_common"
 	"go-datastore-poc/dto"
@@ -16,43 +15,48 @@ func GetFilm(w http.ResponseWriter, r *http.Request) {
 
 	// Create all the required objects
 	ctx, filmService, err := createObjects()
-
-	films, err := filmService.FindByTitle(ctx, mux.Vars(r)["title"])
-
-	if err != nil {
-		log.Print(err)
-		_common.WriteEmpty(w, http.StatusInternalServerError)
-	} else {
-		_common.WriteJson(w, http.StatusOK, films)
+	if checkError(err, w) {
+		return
 	}
+	films, err := filmService.FindByTitle(ctx, mux.Vars(r)["title"])
+	if checkError(err, w) {
+		return
+	}
+
+	_common.WriteJson(w, http.StatusOK, films)
 }
 
 func PostFilm(w http.ResponseWriter, r *http.Request) {
 
-	// Create all the required objects
-	ctx, filmService, err := createObjects()
-	err = errors.New("my error")
-	checkError(err, w)
-
-
+	// Decode json
 	var f dto.Film
-	err = json.NewDecoder(r.Body).Decode(&f)
+	err := json.NewDecoder(r.Body).Decode(&f)
 
-	err = filmService.Create(ctx, &f)
+	// Create all the required objects
+	ctx, filmService, err2 := createObjects()
 
+	if checkError(err, w) && checkError(err2, w) {
+		return
+	}
 
+	if checkError(filmService.Create(ctx, &f), w) {
+		return
+	}
+
+	_common.WriteEmpty(w, http.StatusOK)
 }
 
-func checkError(err error, w http.ResponseWriter) {
+func checkError(err error, w http.ResponseWriter) bool {
 	if err != nil {
 		log.Print(err)
 		_common.WriteEmpty(w, http.StatusInternalServerError)
+		return true
 	} else {
-		_common.WriteEmpty(w, 200)
+		return false
 	}
 }
 
-func createObjects() (context.Context, *FilmService, error)  {
+func createObjects() (context.Context, *FilmService, error) {
 	// TODO: introduce .properties file to store project ID per environment
 	ctx := context.Background()
 	datastoreClient, err := datastore.NewClient(ctx, "joe-gcp-playground")
@@ -60,4 +64,3 @@ func createObjects() (context.Context, *FilmService, error)  {
 	filmService := NewService(repo)
 	return ctx, filmService, err
 }
-

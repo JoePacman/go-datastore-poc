@@ -58,7 +58,7 @@ func (repo *DatastoreRepo) Update(ctx context.Context, Film *dto.Film) error {
 }
 
 func (repo *DatastoreRepo) Create(ctx context.Context, Film *dto.Film) error {
-	k := datastore.NameKey(dto.Kind, "stringId", nil)
+	k := datastore.NameKey(dto.Kind, Film.Title, nil)
 	_, err := repo.client.Put(ctx,k, Film)
 	if err != nil {
 		return err
