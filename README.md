@@ -10,3 +10,6 @@ To install depedencies:
 `go get github.com/joho/godotenv`
 `go get github.com/gorilla/handlers`
 `go get github.com/gorilla/mux`
+
+To deploy to GCP Appengine Standard (from a locally gcloud authenticated account)/ change the GCP project in .env to your own:
+`gcloud app deploy`
