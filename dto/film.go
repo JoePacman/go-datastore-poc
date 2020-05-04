@@ -10,8 +10,9 @@ import (
 const Kind = "film"
 
 type Film struct {
-	Title string          `datastore:"title,noindex" json:"title"`
+	Title string          `datastore:"title" json:"title"`
 	Description string    `datastore:"description,noindex" json:"description"`
-	Genres []Genre        `datastore:"genres,noindex" json:"genres"`
+	Genres []string        `datastore:"genres" json:"genres"`
+	//Genres []Genre        `datastore:"genres" json:"genres"`
 	ReleaseDate time.Time `datastore:"releaseDate,noindex" json:"releaseDate"`
 }

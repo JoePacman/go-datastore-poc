@@ -58,11 +58,12 @@ func (repo *DatastoreRepo) Update(ctx context.Context, Film *dto.Film) error {
 }
 
 func (repo *DatastoreRepo) Create(ctx context.Context, Film *dto.Film) error {
+	//TODO key should not be title. Change out with MD5Hex
 	k := datastore.NameKey(dto.Kind, Film.Title, nil)
-	_, err := repo.client.Put(ctx,k, Film)
+	_, err := repo.client.Put(ctx, k, Film)
 	if err != nil {
 		return err
-		} else {
+	} else {
 		return nil
 	}
 }
