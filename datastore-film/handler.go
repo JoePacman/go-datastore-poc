@@ -5,11 +5,21 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"go-datastore-poc/_common"
 	"go-datastore-poc/dto"
 	"log"
 	"net/http"
+	"os"
 )
+
+// init is invoked before main()
+func init() {
+	// loads values from .env into the system
+	if err := godotenv.Load(); err != nil {
+		log.Print("No .env file found")
+	}
+}
 
 func GetFilm(w http.ResponseWriter, r *http.Request) {
 
@@ -57,9 +67,8 @@ func checkError(err error, w http.ResponseWriter) bool {
 }
 
 func createObjects() (context.Context, *FilmService, error) {
-	// TODO: introduce .properties file to store project ID per environment
 	ctx := context.Background()
-	datastoreClient, err := datastore.NewClient(ctx, "joe-gcp-playground")
+	datastoreClient, err := datastore.NewClient(ctx, os.Getenv("GCP_ENVIRONMENT"))
 	repo := NewDatastoreRepo(datastoreClient)
 	filmService := NewService(repo)
 	return ctx, filmService, err

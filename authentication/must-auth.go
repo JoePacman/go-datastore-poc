@@ -1,8 +1,8 @@
 package authentication
 
 import (
-	"go-datastore-poc/_common"
 	"errors"
+	"go-datastore-poc/_common"
 	"log"
 	"net/http"
 	"strings"
@@ -28,10 +28,10 @@ func checkToken(r *http.Request) error {
 		return err
 	}
 
-	// ToDo: Decode JWT token and validate claims
+	// TODO: Decode JWT token and validate claims
 	return nil
 
-	//ToDo: Alternatively: https://cloud.google.com/endpoints/docs/openapi/get-started-app-engine-standard
+	//TODO: Alternatively: https://cloud.google.com/endpoints/docs/openapi/get-started-app-engine-standard
 }
 
 func getTokenFromHeader(r *http.Request) (*string, error) {

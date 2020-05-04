@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+
 	// Using 'gorilla' library to register Endpoints; It provides more functionality compared to Go's 'net/http'
 	router := mux.NewRouter().StrictSlash(true)
 
@@ -20,7 +21,6 @@ func main() {
 		Methods("GET")
 	router.Handle("/film", authentication.MustAuth(http.HandlerFunc(datastore_film.PostFilm))).
 		Methods("POST")
-
 
 	// When deployed into GCP it will get the port from the Environment variable (it may not be 8080 in GCP)
 	port := os.Getenv("PORT")
